@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Listening P2 - Aptis Real Exam Trainer</title>
+    <style>
+        :root {
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --subtext: #475569;
+            --primary: #1565c0;
+            --primary-hover: #0d47a1;
+            --primary-light: #e3f2fd;
+            --bank-header: #1976d2;
+            --accent: #6d28d9;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --border: #cbd5e1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 12px;
+            max-width: 840px;
+            margin: 0 auto;
+        }
+        header {
+            background: var(--card);
+            padding: 14px 16px;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        h1 { font-size: 1.18rem; font-weight: 800; color: var(--primary); }
+        .stats-bar {
+            display: flex;
+            gap: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 99px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+        .badge.timer { color: var(--primary); background: var(--primary-light); border-color: transparent; }
+        .badge.srs { color: var(--danger); background: var(--danger-bg); border-color: transparent; }
+
+        .filter-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+        .tab-btn {
+            flex: 1;
+            white-space: nowrap;
+            text-align: center;
+            padding: 8px 10px;
+            font-size: 0.83rem;
+            border-radius: 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 8px;
+        }
+        @media (max-width: 580px) {
+            .controls { grid-template-columns: 1fr 1fr; }
+            .controls select { grid-column: span 2; }
+        }
+        select, button {
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+        }
+        button:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary); color: #fff; border: none; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: var(--bg); }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border);
+            font-size: 0.82rem;
+            color: var(--subtext);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .toggle-row label { display: flex; align-items: center; gap: 5px; cursor: pointer; font-weight: 500; }
+
+        /* MAIN EXAM CARD */
+        .quiz-card {
+            background: var(--card);
+            padding: 18px 16px;
+            border-radius: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .topic-header {
+            margin-bottom: 12px;
+        }
+        .topic-title {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .topic-vi {
+            font-size: 0.92rem;
+            color: var(--subtext);
+            margin-top: 2px;
+        }
+
+        /* QUESTION BANK TABLE (GIỐNG PDF & ĐỀ THI) */
+        .question-bank-box {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+        .qb-top-prompt {
+            background: #f8fafc;
+            padding: 8px 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .qb-blue-bar {
+            background: var(--bank-header);
+            color: #ffffff;
+            padding: 9px 12px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            letter-spacing: 0.3px;
+        }
+        .qb-list {
+            display: flex;
+            flex-direction: column;
+        }
+        .qb-item {
+            width: 100%;
+            text-align: left;
+            padding: 11px 14px;
+            border: none;
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 0;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.12s ease;
+        }
+        .qb-item:last-child { border-bottom: none; }
+        .qb-item:hover:not(:disabled) {
+            background: var(--primary-light);
+        }
+        .qb-item.used-item {
+            background: #f8fafc;
+            color: #94a3b8;
+        }
+        .qb-item-en {
+            font-size: 0.96rem;
+            font-weight: 600;
+        }
+        .qb-item-vi {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--subtext);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+        .assigned-pill {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.73rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+            margin-left: 6px;
+        }
+
+        /* 4 SPEAKERS SECTION */
+        .speakers-section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--subtext);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .speaker-slot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .speaker-slot.active-slot {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15);
+        }
+        .speaker-slot.filled-slot {
+            background: #ffffff;
+            border-color: #64748b;
+        }
+        .speaker-slot.correct-slot {
+            background: var(--success-bg);
+            border-color: var(--success);
+        }
+        .speaker-slot.wrong-slot {
+            background: var(--danger-bg);
+            border-color: var(--danger);
+        }
+
+        .slot-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+        .speaker-tag {
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.84rem;
+            padding: 6px 10px;
+            border-radius: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .speaker-slot.correct-slot .speaker-tag { background: var(--success); }
+        .speaker-slot.wrong-slot .speaker-tag { background: var(--danger); }
+
+        .slot-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .slot-placeholder {
+            color: #64748b;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        .slot-en {
+            font-weight: 700;
+            font-size: 0.96rem;
+            color: var(--text);
+            text-decoration: underline;
+        }
+        .slot-vi {
+            font-size: 0.82rem;
+            color: var(--subtext);
+            display: block;
+            margin-top: 2px;
+        }
+        .slot-correction {
+            margin-top: 5px;
+            font-size: 0.84rem;
+            color: #065f46;
+            background: #d1fae5;
+            padding: 5px 9px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 600;
+        }
+        .clear-slot-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: bold;
+            color: var(--subtext);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .clear-slot-btn:hover { background: #cbd5e1; color: var(--danger); }
+
+        .speak-icon {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .exam-dropdown {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 0.92rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #fff;
+            font-weight: 600;
+        }
+
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .action-bar button {
+            flex: 1;
+            padding: 13px;
+            font-size: 0.98rem;
+            border-radius: 10px;
+        }
+
+        .feedback-box {
+            margin-top: 14px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+        .feedback-box.show { display: block; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <h1>🎧 APTIS LISTENING – PART 2 (31 Chủ Đề)</h1>
+        <div class="stats-bar">
+            <span class="badge timer" id="timerDisplay">⏱ 45s</span>
+            <span class="badge" id="scoreDisplay">Đúng: 0/0</span>
+            <span class="badge srs" id="srsDisplay">Cần ôn: 0</span>
+        </div>
+    </div>
+
+    <div class="filter-tabs">
+        <button class="tab-btn active" onclick="setMode('all')" id="tab-all">Tất cả (31 Chủ đề)</button>
+        <button class="tab-btn" onclick="setMode('hot')" id="tab-hot">🔥 Quan trọng (4-5 Lửa)</button>
+        <button class="tab-btn" onclick="setMode('srs')" id="tab-srs">🧠 Chủ đề làm sai (<span id="srsTabCount">0</span>)</button>
+    </div>
+
+    <div class="controls">
+        <select id="lessonSelect" onchange="selectSpecificLesson(this.value)">
+            <option value="all">-- Chế độ trộn ngẫu nhiên thông minh --</option>
+        </select>
+        <button class="btn-outline" onclick="prevLesson()">⬅ Bài trước</button>
+        <button class="btn-outline" onclick="nextLesson()">Bài tiếp ➡</button>
+    </div>
+
+    <div class="toggle-row">
+        <label><input type="checkbox" id="showViToggle" checked onchange="renderLesson()"> Hiện nghĩa tiếng Việt</label>
+        <label><input type="checkbox" id="shuffleBankToggle" onchange="reloadBankOrder()"> Xáo trộn Question Bank</label>
+        <label><input type="checkbox" id="dropdownModeToggle" onchange="renderLesson()"> Chế độ Dropdown</label>
+        <label><input type="checkbox" id="autoAudioToggle" checked> Đọc phát âm</label>
+        <span style="cursor:pointer; color:var(--danger); font-weight:700;" onclick="resetProgress()">🔄 Xoá lịch sử</span>
+    </div>
+</header>
+
+<main id="quizContainer" class="quiz-card">
+    <!-- Nội dung bài học được render tại đây -->
+</main>
+
+<script>
+// DỮ LIỆU CHÍNH XÁC 100% TỪ 31 TRANG PDF APTIS LISTENING PART 2
+const LESSONS_DATA = [
+    {
+        id: 1,
+        title: "CHỦ ĐỀ 1: Visiting a new museum (2026)",
+        topicVi: "Tham quan một bảo tàng mới",
+        flames: 3,
+        options: [
+            { en: "Bought souvenirs at the museum", vi: "Mua đồ lưu niệm tại bảo tàng" },
+            { en: "Finished the visit quickly", vi: "Kết thúc chuyến tham quan nhanh chóng" },
+            { en: "Enjoyed the use of technology", vi: "Thích việc sử dụng công nghệ" },
+            { en: "Found the exhibits boring", vi: "Thấy các hiện vật trưng bày nhàm chán" },
+            { en: "Got lost during the visit", vi: "Bị lạc trong lúc tham quan" },
+            { en: "Wants to visit again", vi: "Muốn quay lại tham quan lần nữa" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Finished the visit quickly", vi: "Kết thúc chuyến tham quan nhanh chóng" },
+            { sp: "Speaker 2 (14.2)", en: "Got lost during the visit", vi: "Bị lạc trong lúc tham quan" },
+            { sp: "Speaker 3 (14.3)", en: "Enjoyed the use of technology", vi: "Thích việc sử dụng công nghệ" },
+            { sp: "Speaker 4 (14.4)", en: "Wants to visit again", vi: "Muốn quay lại tham quan lần nữa" }
+        ]
+    },
+    {
+        id: 2,
+        title: "CHỦ ĐỀ 2: Doing exercises (2026)",
+        topicVi: "Tập thể dục",
+        flames: 5,
+        options: [
+            { en: "Exercise outdoors every day", vi: "Tập thể dục ngoài trời mỗi ngày" },
+            { en: "Exercise to lose weight", vi: "Tập thể dục để giảm cân" },
+            { en: "Have fun exercising with others", vi: "Cảm thấy vui khi tập thể dục cùng người khác" },
+            { en: "Improve work performance", vi: "Cải thiện hiệu suất làm việc" },
+            { en: "Hate exercising", vi: "Ghét tập thể dục" },
+            { en: "Find exercise tiring", vi: "Thấy việc tập thể dục mệt mỏi" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Improve work performance", vi: "Cải thiện hiệu suất làm việc" },
+            { sp: "Speaker 2 (14.2)", en: "Find exercise tiring", vi: "Thấy việc tập thể dục mệt mỏi" },
+            { sp: "Speaker 3 (14.3)", en: "Have fun exercising with others", vi: "Cảm thấy vui khi tập thể dục cùng người khác" },
+            { sp: "Speaker 4 (14.4)", en: "Hate exercising", vi: "Ghét tập thể dục" }
+        ]
+    },
+    {
+        id: 3,
+        title: "CHỦ ĐỀ 3: Their protecting the environment (2026)",
+        topicVi: "Cách họ bảo vệ môi trường",
+        flames: 5,
+        options: [
+            { en: "protects the environment by using reusable bags.", vi: "Bảo vệ môi trường bằng cách sử dụng túi tái sử dụng" },
+            { en: "protects the environment by recycling at home.", vi: "Bảo vệ môi trường bằng cách tái chế tại nhà" },
+            { en: "protects the environment by using less electricity.", vi: "Bảo vệ môi trường bằng cách sử dụng ít điện hơn" },
+            { en: "protects the environment by not driving to work", vi: "Bảo vệ môi trường bằng cách không lái xe đi làm" },
+            { en: "protects the environment by using less water.", vi: "Bảo vệ môi trường bằng cách sử dụng ít nước hơn" },
+            { en: "protects the environment by shopping online.", vi: "Bảo vệ môi trường bằng cách mua sắm trực tuyến" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "protects the environment by using less electricity.", vi: "Bảo vệ môi trường bằng cách sử dụng ít điện hơn" },
+            { sp: "Speaker 2 (14.2)", en: "protects the environment by not driving to work", vi: "Bảo vệ môi trường bằng cách không lái xe đi làm" },
+            { sp: "Speaker 3 (14.3)", en: "protects the environment by shopping online.", vi: "Bảo vệ môi trường bằng cách mua sắm trực tuyến" },
+            { sp: "Speaker 4 (14.4)", en: "protects the environment by using less water.", vi: "Bảo vệ môi trường bằng cách sử dụng ít nước hơn" }
+        ]
+    },
+    {
+        id: 4,
+        title: "CHỦ ĐỀ 4: Doing arts (2026)",
+        topicVi: "Tham gia các hoạt động nghệ thuật",
+        flames: 2,
+        options: [
+            { en: "Doing arts with children", vi: "Làm nghệ thuật cùng trẻ em" },
+            { en: "Doing arts as part of the job", vi: "Làm nghệ thuật như một phần của công việc" },
+            { en: "Doing arts to relax", vi: "Làm nghệ thuật để thư giãn" },
+            { en: "Doing arts alone", vi: "Làm nghệ thuật một mình" },
+            { en: "Doing arts outdoors", vi: "Làm nghệ thuật ngoài trời" },
+            { en: "Doing as a social activity", vi: "Làm nghệ thuật như một hoạt động giao lưu xã hội" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Doing as a social activity", vi: "Làm nghệ thuật như một hoạt động giao lưu xã hội" },
+            { sp: "Speaker 2 (14.2)", en: "Doing arts with children", vi: "Làm nghệ thuật cùng trẻ em" },
+            { sp: "Speaker 3 (14.3)", en: "Doing arts as part of the job", vi: "Làm nghệ thuật như một phần của công việc" },
+            { sp: "Speaker 4 (14.4)", en: "Doing arts alone", vi: "Làm nghệ thuật một mình" }
+        ]
+    },
+    {
+        id: 5,
+        title: "CHỦ ĐỀ 5: Online shopping (Version 2) (2026)",
+        topicVi: "Mua sắm trực tuyến (Phiên bản 2)",
+        flames: 4,
+        options: [
+            { en: "Products are delivered", vi: "Sản phẩm được giao tận nơi" },
+            { en: "It saves time", vi: "Tiết kiệm thời gian" },
+            { en: "Can compare customer reviews", vi: "Có thể so sánh đánh giá của khách hàng" },
+            { en: "Avoids crowded shops", vi: "Tránh các cửa hàng đông đúc" },
+            { en: "It is cheaper", vi: "Rẻ hơn" },
+            { en: "There are more choices", vi: "Có nhiều lựa chọn hơn" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "It saves time", vi: "Tiết kiệm thời gian" },
+            { sp: "Speaker 2 (14.2)", en: "It is cheaper", vi: "Rẻ hơn" },
+            { sp: "Speaker 3 (14.3)", en: "Products are delivered", vi: "Sản phẩm được giao tận nơi" },
+            { sp: "Speaker 4 (14.4)", en: "There are more choices", vi: "Có nhiều lựa chọn hơn" }
+        ]
+    },
+    {
+        id: 6,
+        title: "CHỦ ĐỀ 6: Studying habit (2026)",
+        topicVi: "Thói quen học tập",
+        flames: 4,
+        options: [
+            { en: "Prefer to study in a quiet place", vi: "Thích học ở nơi yên tĩnh" },
+            { en: "Prefer to study early in the morning", vi: "Thích học vào sáng sớm" },
+            { en: "Prefer to study with music", vi: "Thích học khi có nhạc" },
+            { en: "Prefer to study at various places", vi: "Thích học ở nhiều địa điểm khác nhau" },
+            { en: "Prefer to study late at night", vi: "Thích học vào đêm muộn" },
+            { en: "Prefer to study with a friend", vi: "Thích học cùng một người bạn" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Prefer to study late at night", vi: "Thích học vào đêm muộn" },
+            { sp: "Speaker 2 (14.2)", en: "Prefer to study at various places", vi: "Thích học ở nhiều địa điểm khác nhau" },
+            { sp: "Speaker 3 (14.3)", en: "Prefer to study with music", vi: "Thích học khi có nhạc" },
+            { sp: "Speaker 4 (14.4)", en: "Prefer to study in a quiet place", vi: "Thích học ở nơi yên tĩnh" }
+        ]
+    },
+    {
+        id: 7,
+        title: "CHỦ ĐỀ 7: Their journey to work (2026)",
+        topicVi: "Cách họ đi làm",
+        flames: 4,
+        options: [
+            { en: "Go by bus", vi: "Đi bằng xe buýt" },
+            { en: "Take a taxi", vi: "Đi taxi" },
+            { en: "Ride a bicycle", vi: "Đi xe đạp" },
+            { en: "Walk with friends", vi: "Đi bộ cùng bạn bè" },
+            { en: "Walk alone", vi: "Đi bộ một mình" },
+            { en: "Drive car", vi: "Lái ô tô" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Walk with friends", vi: "Đi bộ cùng bạn bè" },
+            { sp: "Speaker 2 (14.2)", en: "Go by bus", vi: "Đi bằng xe buýt" },
+            { sp: "Speaker 3 (14.3)", en: "Walk alone", vi: "Đi bộ một mình" },
+            { sp: "Speaker 4 (14.4)", en: "Drive car", vi: "Lái ô tô" }
+        ]
+    },
+    {
+        id: 8,
+        title: "CHỦ ĐỀ 8: Shopping online (2026)",
+        topicVi: "Mua sắm trực tuyến",
+        flames: 4,
+        options: [
+            { en: "products are delivered", vi: "Sản phẩm được giao tận nơi" },
+            { en: "it saves time", vi: "Tiết kiệm thời gian" },
+            { en: "it is cheaper", vi: "Rẻ hơn" },
+            { en: "it has more choices", vi: "Có nhiều lựa chọn hơn" },
+            { en: "avoids crowded shops", vi: "Tránh các cửa hàng đông đúc" },
+            { en: "can compare customer reviews", vi: "Có thể so sánh đánh giá của khách hàng" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "products are delivered", vi: "Sản phẩm được giao tận nơi" },
+            { sp: "Speaker 2 (14.2)", en: "it is cheaper", vi: "Rẻ hơn" },
+            { sp: "Speaker 3 (14.3)", en: "it saves time", vi: "Tiết kiệm thời gian" },
+            { sp: "Speaker 4 (14.4)", en: "it has more choices", vi: "Có nhiều lựa chọn hơn" }
+        ]
+    },
+    {
+        id: 9,
+        title: "CHỦ ĐỀ 9: Protecting the environment (2026)",
+        topicVi: "Bảo vệ môi trường",
+        flames: 5,
+        options: [
+            { en: "Using less electricity", vi: "Sử dụng ít điện hơn" },
+            { en: "Wasting more energy", vi: "Lãng phí nhiều năng lượng hơn" },
+            { en: "Using less water", vi: "Sử dụng ít nước hơn" },
+            { en: "Not driving to work", vi: "Không lái xe đi làm" },
+            { en: "Buying imported goods", vi: "Mua hàng nhập khẩu" },
+            { en: "Shopping online", vi: "Mua sắm trực tuyến" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Shopping online", vi: "Mua sắm trực tuyến" },
+            { sp: "Speaker 2 (14.2)", en: "Not driving to work", vi: "Không lái xe đi làm" },
+            { sp: "Speaker 3 (14.3)", en: "Using less electricity", vi: "Sử dụng ít điện hơn" },
+            { sp: "Speaker 4 (14.4)", en: "Using less water", vi: "Sử dụng ít nước hơn" }
+        ]
+    },
+    {
+        id: 10,
+        title: "CHỦ ĐỀ 10: Running",
+        topicVi: "Chạy bộ",
+        flames: 0,
+        options: [
+            { en: "prefer running in the street", vi: "Thích chạy bộ trên đường phố" },
+            { en: "at the seaside", vi: "Ở bờ biển" },
+            { en: "in the fitness center", vi: "Trong trung tâm thể hình" },
+            { en: "in the countryside", vi: "Ở vùng nông thôn" },
+            { en: "on the running track", vi: "Trên đường chạy" },
+            { en: "in a park", vi: "Ở công viên" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "prefer running in the street", vi: "Thích chạy bộ trên đường phố" },
+            { sp: "Speaker 2 (14.2)", en: "at the seaside", vi: "Ở bờ biển" },
+            { sp: "Speaker 3 (14.3)", en: "on the running track", vi: "Trên đường chạy" },
+            { sp: "Speaker 4 (14.4)", en: "in the fitness center", vi: "Trong trung tâm thể hình" }
+        ]
+    },
+    {
+        id: 11,
+        title: "CHỦ ĐỀ 11: Their purposes of using the Internet (2026)",
+        topicVi: "Mục đích sử dụng Internet của họ",
+        flames: 4,
+        options: [
+            { en: "listen to music", vi: "Nghe nhạc" },
+            { en: "shop online", vi: "Mua sắm trực tuyến" },
+            { en: "watch film", vi: "Xem phim" },
+            { en: "communicate with friends", vi: "Giao tiếp với bạn bè" },
+            { en: "complete school assignments", vi: "Hoàn thành bài tập ở trường" },
+            { en: "find transport information", vi: "Tìm thông tin giao thông" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "watch film", vi: "Xem phim" },
+            { sp: "Speaker 2 (14.2)", en: "communicate with friends", vi: "Giao tiếp với bạn bè" },
+            { sp: "Speaker 3 (14.3)", en: "complete school assignments", vi: "Hoàn thành bài tập ở trường" },
+            { sp: "Speaker 4 (14.4)", en: "find transport information", vi: "Tìm thông tin giao thông" }
+        ]
+    },
+    {
+        id: 12,
+        title: "CHỦ ĐỀ 12: When they like listening to music (2026)",
+        topicVi: "Khi họ thích nghe nhạc",
+        flames: 3,
+        options: [
+            { en: "While studying", vi: "Trong khi học" },
+            { en: "To relax", vi: "Để thư giãn" },
+            { en: "While singing", vi: "Trong khi hát" },
+            { en: "While travelling", vi: "Trong khi đi lại" },
+            { en: "Before going to sleep", vi: "Trước khi đi ngủ" },
+            { en: "After waking up", vi: "Sau khi thức dậy" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "To relax", vi: "Để thư giãn" },
+            { sp: "Speaker 2 (14.2)", en: "While studying", vi: "Trong khi học" },
+            { sp: "Speaker 3 (14.3)", en: "While singing", vi: "Trong khi hát" },
+            { sp: "Speaker 4 (14.4)", en: "After waking up", vi: "Sau khi thức dậy" }
+        ]
+    },
+    {
+        id: 13,
+        title: "CHỦ ĐỀ 13: Protecting the environment (Version 2) (2026)",
+        topicVi: "Bảo vệ môi trường (Phiên bản 2)",
+        flames: 5,
+        options: [
+            { en: "Give away used items", vi: "Cho/tặng lại những đồ đã qua sử dụng" },
+            { en: "Plant trees in the backyard", vi: "Trồng cây ở sân sau" },
+            { en: "Buy environmentally friendly products", vi: "Mua các sản phẩm thân thiện với môi trường" },
+            { en: "Reuse containers for storing food", vi: "Tái sử dụng hộp để đựng thực phẩm" },
+            { en: "Does not use commercial cleaning products", vi: "Không sử dụng các sản phẩm tẩy rửa thương mại" },
+            { en: "Use solar panels for electricity", vi: "Sử dụng tấm pin mặt trời để tạo điện" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Does not use commercial cleaning products", vi: "Không sử dụng các sản phẩm tẩy rửa thương mại" },
+            { sp: "Speaker 2 (14.2)", en: "Give away used items", vi: "Cho/tặng lại những đồ đã qua sử dụng" },
+            { sp: "Speaker 3 (14.3)", en: "Buy environmentally friendly products", vi: "Mua các sản phẩm thân thiện với môi trường" },
+            { sp: "Speaker 4 (14.4)", en: "Reuse containers for storing food", vi: "Tái sử dụng hộp để đựng thực phẩm" }
+        ]
+    },
+    {
+        id: 14,
+        title: "CHỦ ĐỀ 14: Protecting the environment (Version 3) (2026)",
+        topicVi: "Bảo vệ môi trường (Phiên bản 3)",
+        flames: 5,
+        options: [
+            { en: "Reuse containers for storing food", vi: "Tái sử dụng hộp để đựng thực phẩm" },
+            { en: "Use solar panels for electricity", vi: "Sử dụng tấm pin mặt trời để tạo điện" },
+            { en: "Does not use commercial cleaning products", vi: "Không sử dụng các sản phẩm tẩy rửa thương mại" },
+            { en: "Give away used items", vi: "Cho/tặng lại những đồ đã qua sử dụng" },
+            { en: "Buy environmentally friendly products", vi: "Mua các sản phẩm thân thiện với môi trường" },
+            { en: "Plant trees in the backyard", vi: "Trồng cây ở sân sau" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Give away used items", vi: "Cho/tặng lại những đồ đã qua sử dụng" },
+            { sp: "Speaker 2 (14.2)", en: "Buy environmentally friendly products", vi: "Mua các sản phẩm thân thiện với môi trường" },
+            { sp: "Speaker 3 (14.3)", en: "Reuse containers for storing food", vi: "Tái sử dụng hộp để đựng thực phẩm" },
+            { sp: "Speaker 4 (14.4)", en: "Does not use commercial cleaning products", vi: "Không sử dụng các sản phẩm tẩy rửa thương mại" }
+        ]
+    },
+    {
+        id: 15,
+        title: "CHỦ ĐỀ 15: Online shopping (Version 2) (2026) – Bộ 2",
+        topicVi: "Mua sắm trực tuyến (Phiên bản 2)",
+        flames: 4,
+        options: [
+            { en: "There are more choices", vi: "Có nhiều lựa chọn hơn" },
+            { en: "It is cheaper", vi: "Rẻ hơn" },
+            { en: "It increases efficiency", vi: "Tăng hiệu quả" },
+            { en: "The products are delivered", vi: "Sản phẩm được giao tận nơi" },
+            { en: "It saves time", vi: "Tiết kiệm thời gian" },
+            { en: "It provides better customer service", vi: "Cung cấp dịch vụ khách hàng tốt hơn" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "The products are delivered", vi: "Sản phẩm được giao tận nơi" },
+            { sp: "Speaker 2 (14.2)", en: "It is cheaper", vi: "Rẻ hơn" },
+            { sp: "Speaker 3 (14.3)", en: "It saves time", vi: "Tiết kiệm thời gian" },
+            { sp: "Speaker 4 (14.4)", en: "There are more choices", vi: "Có nhiều lựa chọn hơn" }
+        ]
+    },
+    {
+        id: 16,
+        title: "CHỦ ĐỀ 16: Listening to music (2026)",
+        topicVi: "Nghe nhạc",
+        flames: 3,
+        options: [
+            { en: "After waking up", vi: "Sau khi thức dậy" },
+            { en: "To relax", vi: "Để thư giãn" },
+            { en: "While singing", vi: "Trong khi hát" },
+            { en: "While studying", vi: "Trong khi học" },
+            { en: "to complain", vi: "Để phàn nàn" },
+            { en: "to discuss ideas", vi: "Để thảo luận ý tưởng" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "To relax", vi: "Để thư giãn" },
+            { sp: "Speaker 2 (14.2)", en: "After waking up", vi: "Sau khi thức dậy" },
+            { sp: "Speaker 3 (14.3)", en: "While singing", vi: "Trong khi hát" },
+            { sp: "Speaker 4 (14.4)", en: "While studying", vi: "Trong khi học" }
+        ]
+    },
+    {
+        id: 17,
+        title: "CHỦ ĐỀ 17: Outdoor activities (2026)",
+        topicVi: "Các hoạt động ngoài trời",
+        flames: 3,
+        options: [
+            { en: "going for a run", vi: "Đi chạy bộ" },
+            { en: "climbing", vi: "Leo núi" },
+            { en: "to complain", vi: "Để phàn nàn" },
+            { en: "mountain biking", vi: "Đạp xe địa hình" },
+            { en: "to discuss ideas", vi: "Để thảo luận ý tưởng" },
+            { en: "horse riding", vi: "Cưỡi ngựa" },
+            { en: "hiking", vi: "Đi bộ đường dài" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "horse riding", vi: "Cưỡi ngựa" },
+            { sp: "Speaker 2 (14.2)", en: "going for a run", vi: "Đi chạy bộ" },
+            { sp: "Speaker 3 (14.3)", en: "hiking", vi: "Đi bộ đường dài" },
+            { sp: "Speaker 4 (14.4)", en: "mountain biking", vi: "Đạp xe địa hình" }
+        ]
+    },
+    {
+        id: 18,
+        title: "CHỦ ĐỀ 18: Places to run (2026)",
+        topicVi: "Những nơi để chạy bộ",
+        flames: 4,
+        options: [
+            { en: "on the running track", vi: "Trên đường chạy" },
+            { en: "at the seaside", vi: "Ở bờ biển" },
+            { en: "in the library", vi: "Trong thư viện" },
+            { en: "at the supermarket", vi: "Ở siêu thị" },
+            { en: "in the street", vi: "Trên đường phố" },
+            { en: "in the fitness centre", vi: "Trong trung tâm thể hình" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "in the fitness centre", vi: "Trong trung tâm thể hình" },
+            { sp: "Speaker 2 (14.2)", en: "at the seaside", vi: "Ở bờ biển" },
+            { sp: "Speaker 3 (14.3)", en: "in the street", vi: "Trên đường phố" },
+            { sp: "Speaker 4 (14.4)", en: "on the running track", vi: "Trên đường chạy" }
+        ]
+    },
+    {
+        id: 19,
+        title: "CHỦ ĐỀ 19: Doing exercise (2026)",
+        topicVi: "Tập thể dục",
+        flames: 5,
+        options: [
+            { en: "help improve work performance", vi: "Giúp cải thiện hiệu suất làm việc" },
+            { en: "find exercise tiring", vi: "Thấy việc tập thể dục mệt mỏi" },
+            { en: "hate exercising", vi: "Ghét tập thể dục" },
+            { en: "has fun when exercising with friends", vi: "Cảm thấy vui khi tập thể dục cùng bạn bè" },
+            { en: "in the library", vi: "Trong thư viện" },
+            { en: "at the supermarket", vi: "Ở siêu thị" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "hate exercising", vi: "Ghét tập thể dục" },
+            { sp: "Speaker 2 (14.2)", en: "help improve work performance", vi: "Giúp cải thiện hiệu suất làm việc" },
+            { sp: "Speaker 3 (14.3)", en: "find exercise tiring", vi: "Thấy việc tập thể dục mệt mỏi" },
+            { sp: "Speaker 4 (14.4)", en: "has fun when exercising with friends", vi: "Cảm thấy vui khi tập thể dục cùng bạn bè" }
+        ]
+    },
+    {
+        id: 20,
+        title: "CHỦ ĐỀ 20: The Internet (2026)",
+        topicVi: "Internet",
+        flames: 4,
+        options: [
+            { en: "listen to the radio", vi: "Nghe đài" },
+            { en: "complete assignments", vi: "Hoàn thành bài tập" },
+            { en: "buy groceries online", vi: "Mua nhu yếu phẩm trực tuyến" },
+            { en: "find transport information", vi: "Tìm thông tin giao thông" },
+            { en: "watch films", vi: "Xem phim" },
+            { en: "communicate with friends", vi: "Giao tiếp với bạn bè" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "watch films", vi: "Xem phim" },
+            { sp: "Speaker 2 (14.2)", en: "communicate with friends", vi: "Giao tiếp với bạn bè" },
+            { sp: "Speaker 3 (14.3)", en: "complete assignments", vi: "Hoàn thành bài tập" },
+            { sp: "Speaker 4 (14.4)", en: "find transport information", vi: "Tìm thông tin giao thông" }
+        ]
+    },
+    {
+        id: 21,
+        title: "CHỦ ĐỀ 21: Art (2026)",
+        topicVi: "Nghệ thuật",
+        flames: 2,
+        options: [
+            { en: "as part of their job", vi: "Như một phần công việc của họ" },
+            { en: "alone", vi: "Một mình" },
+            { en: "with children", vi: "Cùng trẻ em" },
+            { en: "stay at home", vi: "Ở nhà" },
+            { en: "social activity", vi: "Hoạt động giao lưu xã hội" },
+            { en: "together", vi: "Cùng nhau" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "social activity", vi: "Hoạt động giao lưu xã hội" },
+            { sp: "Speaker 2 (14.2)", en: "with children", vi: "Cùng trẻ em" },
+            { sp: "Speaker 3 (14.3)", en: "as part of their job", vi: "Như một phần công việc của họ" },
+            { sp: "Speaker 4 (14.4)", en: "alone", vi: "Một mình" }
+        ]
+    },
+    {
+        id: 22,
+        title: "CHỦ ĐỀ 22: Transportation to work (2026)",
+        topicVi: "Phương tiện/cách đi làm",
+        flames: 4,
+        options: [
+            { en: "travel by car", vi: "Đi làm bằng ô tô" },
+            { en: "walk alone", vi: "Đi bộ một mình" },
+            { en: "ride a bicycle", vi: "Đi xe đạp" },
+            { en: "travel by bus", vi: "Đi làm bằng xe buýt" },
+            { en: "take a taxi", vi: "Đi taxi" },
+            { en: "walk with a friend", vi: "Đi bộ cùng một người bạn" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "travel by bus", vi: "Đi làm bằng xe buýt" },
+            { sp: "Speaker 2 (14.2)", en: "travel by car", vi: "Đi làm bằng ô tô" },
+            { sp: "Speaker 3 (14.3)", en: "walk alone", vi: "Đi bộ một mình" },
+            { sp: "Speaker 4 (14.4)", en: "walk with a friend", vi: "Đi bộ cùng một người bạn" }
+        ]
+    },
+    {
+        id: 23,
+        title: "CHỦ ĐỀ 23: Studying (Version 2) (2026)",
+        topicVi: "Học tập (Phiên bản 2)",
+        flames: 4,
+        options: [
+            { en: "Late at night", vi: "Vào đêm muộn" },
+            { en: "With background noise", vi: "Khi có tiếng ồn xung quanh" },
+            { en: "Early in the morning", vi: "Vào sáng sớm" },
+            { en: "With music", vi: "Khi có nhạc" },
+            { en: "In a quiet place", vi: "Ở nơi yên tĩnh" },
+            { en: "In various places", vi: "Ở nhiều nơi khác nhau" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "In various places", vi: "Ở nhiều nơi khác nhau" },
+            { sp: "Speaker 2 (14.2)", en: "In a quiet place", vi: "Ở nơi yên tĩnh" },
+            { sp: "Speaker 3 (14.3)", en: "With music", vi: "Khi có nhạc" },
+            { sp: "Speaker 4 (14.4)", en: "Late at night", vi: "Vào đêm muộn" }
+        ]
+    },
+    {
+        id: 24,
+        title: "CHỦ ĐỀ 24: Studying (2026)",
+        topicVi: "Học tập",
+        flames: 4,
+        options: [
+            { en: "At home", vi: "Ở nhà" },
+            { en: "In the coffee shop", vi: "Ở quán cà phê" },
+            { en: "In the park", vi: "Ở công viên" },
+            { en: "In a shared workspace", vi: "Ở không gian làm việc chung" },
+            { en: "On public transport", vi: "Trên phương tiện giao thông công cộng" },
+            { en: "While traveling abroad", vi: "Trong khi đi du lịch nước ngoài" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "In the coffee shop", vi: "Ở quán cà phê" },
+            { sp: "Speaker 2 (14.2)", en: "In the park", vi: "Ở công viên" },
+            { sp: "Speaker 3 (14.3)", en: "On public transport", vi: "Trên phương tiện giao thông công cộng" },
+            { sp: "Speaker 4 (14.4)", en: "At home", vi: "Ở nhà" }
+        ]
+    },
+    {
+        id: 25,
+        title: "CHỦ ĐỀ 25: Restaurant experiences",
+        topicVi: "Trải nghiệm tại nhà hàng",
+        flames: 0,
+        options: [
+            { en: "Enjoyed a live performance", vi: "Thích một buổi biểu diễn trực tiếp" },
+            { en: "Ordered the wrong dish", vi: "Gọi nhầm món" },
+            { en: "Was still hungry after dinner", vi: "Vẫn còn đói sau bữa tối" },
+            { en: "Met a successful staff member", vi: "Gặp một nhân viên thành đạt" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "Was still hungry after dinner", vi: "Vẫn còn đói sau bữa tối" },
+            { sp: "Speaker 2 (14.2)", en: "Ordered the wrong dish", vi: "Gọi nhầm món" },
+            { sp: "Speaker 3 (14.3)", en: "Met a successful staff member", vi: "Gặp một nhân viên thành đạt" },
+            { sp: "Speaker 4 (14.4)", en: "Enjoyed a live performance", vi: "Thích một buổi biểu diễn trực tiếp" }
+        ]
+    },
+    {
+        id: 26,
+        title: "CHỦ ĐỀ 26: Restaurant experience",
+        topicVi: "Trải nghiệm tại nhà hàng",
+        flames: 0,
+        options: [
+            { en: "met a successful staff member", vi: "Gặp một nhân viên thành đạt" },
+            { en: "was still hungry after dinner", vi: "Vẫn còn đói sau bữa tối" },
+            { en: "read reviews before visiting", vi: "Đọc đánh giá trước khi đến" },
+            { en: "tried the famous chicken dish", vi: "Thử món gà nổi tiếng" },
+            { en: "ordered the wrong dish", vi: "Gọi nhầm món" },
+            { en: "watched a nice performance", vi: "Xem một buổi biểu diễn hay" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "was still hungry after dinner", vi: "Vẫn còn đói sau bữa tối" },
+            { sp: "Speaker 2 (14.2)", en: "ordered the wrong dish", vi: "Gọi nhầm món" },
+            { sp: "Speaker 3 (14.3)", en: "met a successful staff member", vi: "Gặp một nhân viên thành đạt" },
+            { sp: "Speaker 4 (14.4)", en: "watched a nice performance", vi: "Xem một buổi biểu diễn hay" }
+        ]
+    },
+    {
+        id: 27,
+        title: "CHỦ ĐỀ 27: Sport",
+        topicVi: "Thể thao",
+        flames: 0,
+        options: [
+            { en: "plays in a team sport", vi: "Chơi một môn thể thao đồng đội" },
+            { en: "does sports on a bicycle", vi: "Chơi thể thao bằng xe đạp" },
+            { en: "plays in the street", vi: "Chơi thể thao ngoài đường" },
+            { en: "plays sport indoors", vi: "Chơi thể thao trong nhà" },
+            { en: "spends time in the water", vi: "Tham gia hoạt động thể thao dưới nước" },
+            { en: "does sports with animals", vi: "Chơi thể thao cùng động vật" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "plays in a team sport", vi: "Chơi một môn thể thao đồng đội" },
+            { sp: "Speaker 2 (14.2)", en: "spends time in the water", vi: "Tham gia hoạt động thể thao dưới nước" },
+            { sp: "Speaker 3 (14.3)", en: "plays in the street", vi: "Chơi thể thao ngoài đường" },
+            { sp: "Speaker 4 (14.4)", en: "does sports with animals", vi: "Chơi thể thao cùng động vật" }
+        ]
+    },
+    {
+        id: 28,
+        title: "CHỦ ĐỀ 28: Reading books (2026)",
+        topicVi: "Đọc sách",
+        flames: 3,
+        options: [
+            { en: "read books in the library", vi: "Đọc sách trong thư viện" },
+            { en: "read when travelling to school", vi: "Đọc sách khi đi đến trường" },
+            { en: "prefer reading comics", vi: "Thích đọc truyện tranh" },
+            { en: "prefer another activity to reading books", vi: "Thích một hoạt động khác hơn là đọc sách" },
+            { en: "don't have time to read", vi: "Không có thời gian đọc sách" },
+            { en: "read on their beds", vi: "Đọc sách trên giường" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "read when travelling to school", vi: "Đọc sách khi đi đến trường" },
+            { sp: "Speaker 2 (14.2)", en: "don't have time to read", vi: "Không có thời gian đọc sách" },
+            { sp: "Speaker 3 (14.3)", en: "read on their beds", vi: "Đọc sách trên giường" },
+            { sp: "Speaker 4 (14.4)", en: "prefer another activity to reading books", vi: "Thích một hoạt động khác hơn là đọc sách" }
+        ]
+    },
+    {
+        id: 29,
+        title: "CHỦ ĐỀ 29: Reading books (2026) - Additional set",
+        topicVi: "Đọc sách (Bộ bổ sung)",
+        flames: 3,
+        options: [
+            { en: "read when travelling to school", vi: "Đọc sách khi đi đến trường" },
+            { en: "read on their beds", vi: "Đọc sách trên giường" },
+            { en: "don't have time to read", vi: "Không có thời gian đọc sách" },
+            { en: "prefer another activity to reading books", vi: "Thích một hoạt động khác hơn là đọc sách" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (14.1)", en: "read when travelling to school", vi: "Đọc sách khi đi đến trường" },
+            { sp: "Speaker 2 (14.2)", en: "don't have time to read", vi: "Không có thời gian đọc sách" },
+            { sp: "Speaker 3 (14.3)", en: "read on their beds", vi: "Đọc sách trên giường" },
+            { sp: "Speaker 4 (14.4)", en: "prefer another activity to reading books", vi: "Thích một hoạt động khác hơn là đọc sách" }
+        ]
+    },
+    {
+        id: 30,
+        title: "CHỦ ĐỀ 30: Discussing their restaurant experiences",
+        topicVi: "Thảo luận về trải nghiệm tại nhà hàng của họ",
+        flames: 0,
+        options: [
+            { en: "liked the restaurant decor", vi: "Thích cách trang trí của nhà hàng" },
+            { en: "was still hungry after dinner", vi: "Vẫn còn đói sau bữa tối" },
+            { en: "paid a high price", vi: "Trả mức giá cao" },
+            { en: "met the helpful staff", vi: "Gặp nhân viên nhiệt tình, hữu ích" },
+            { en: "watched a perfect performance", vi: "Xem một màn biểu diễn tuyệt vời" },
+            { en: "complained about slow service", vi: "Phàn nàn về dịch vụ chậm" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (15.1)", en: "was still hungry after dinner", vi: "Vẫn còn đói sau bữa tối" },
+            { sp: "Speaker 2 (15.2)", en: "paid a high price", vi: "Trả mức giá cao" },
+            { sp: "Speaker 3 (15.3)", en: "met the helpful staff", vi: "Gặp nhân viên nhiệt tình, hữu ích" },
+            { sp: "Speaker 4 (15.4)", en: "watched a perfect performance", vi: "Xem một màn biểu diễn tuyệt vời" }
+        ]
+    },
+    {
+        id: 31,
+        title: "CHỦ ĐỀ 31: Shopping Habits (2026)",
+        topicVi: "Thói quen mua sắm",
+        flames: 4,
+        options: [
+            { en: "shops only on the internet", vi: "Chỉ mua sắm trên Internet" },
+            { en: "enjoys spending time in shopping centres", vi: "Thích dành thời gian ở các trung tâm mua sắm" },
+            { en: "tries to save money", vi: "Cố gắng tiết kiệm tiền" },
+            { en: "considers the environmental impact", vi: "Cân nhắc tác động đến môi trường" },
+            { en: "buys products as soon as they see them", vi: "Mua sản phẩm ngay khi nhìn thấy chúng" },
+            { en: "has limited time for shopping", vi: "Có ít thời gian để mua sắm" }
+        ],
+        answers: [
+            { sp: "Speaker 1 (16.1)", en: "has limited time for shopping", vi: "Có ít thời gian để mua sắm" },
+            { sp: "Speaker 2 (16.2)", en: "tries to save money", vi: "Cố gắng tiết kiệm tiền" },
+            { sp: "Speaker 3 (16.3)", en: "considers the environmental impact", vi: "Cân nhắc tác động đến môi trường" },
+            { sp: "Speaker 4 (16.4)", en: "shops only on the internet", vi: "Chỉ mua sắm trên Internet" }
+        ]
+    }
+];
+
+// QUẢN LÝ TRẠNG THÁI & LẶP LẠI NGẮT QUÃNG
+let srsLessonWeights = JSON.parse(localStorage.getItem('aptis_p2_31_srs') || '{}');
+let stats = JSON.parse(localStorage.getItem('aptis_p2_31_stats') || '{"correct":0,"total":0}');
+let currentMode = 'all'; // 'all', 'hot', 'srs'
+let selectedLessonId = 'all';
+let currentLesson = null;
+let displayedOptions = [];
+let userSelections = [null, null, null, null]; // Index của displayedOptions cho Speaker 1, 2, 3, 4
+let activeSlot = 0; // 0 -> 3 tương ứng Speaker 1 -> 4
+let isSubmitted = false;
+let countdownTimer = null;
+let timeLeft = 45;
+
+function saveState() {
+    localStorage.setItem('aptis_p2_31_srs', JSON.stringify(srsLessonWeights));
+    localStorage.setItem('aptis_p2_31_stats', JSON.stringify(stats));
+    updateStatsUI();
+}
+
+function updateStatsUI() {
+    document.getElementById('scoreDisplay').textContent = `Đúng: ${stats.correct}/${stats.total}`;
+    const srsCount = Object.values(srsLessonWeights).filter(w => w > 0).length;
+    document.getElementById('srsDisplay').textContent = `Cần ôn: ${srsCount}`;
+    document.getElementById('srsTabCount').textContent = srsCount;
+}
+
+function initDropdown() {
+    const select = document.getElementById('lessonSelect');
+    LESSONS_DATA.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l.id;
+        const fireStr = l.flames > 0 ? "🔥".repeat(l.flames) + " " : "";
+        opt.textContent = `${fireStr}${l.title} (${l.topicVi})`;
+        select.appendChild(opt);
+    });
+}
+
+function shuffleArray(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+}
+
+function pickNextLesson() {
+    if (selectedLessonId !== 'all') {
+        return LESSONS_DATA.find(l => l.id === parseInt(selectedLessonId)) || LESSONS_DATA[0];
+    }
+
+    let pool = LESSONS_DATA;
+    if (currentMode === 'hot') {
+        pool = LESSONS_DATA.filter(l => l.flames >= 4);
+    } else if (currentMode === 'srs') {
+        pool = LESSONS_DATA.filter(l => (srsLessonWeights[l.id] || 0) > 0);
+        if (pool.length === 0) {
+            alert("Tuyệt vời! Bạn không còn chủ đề nào làm sai cần ôn lại. Chuyển về chế độ Tất cả.");
+            setMode('all');
+            return pickNextLesson();
+        }
+    }
+
+    let weightedPool = [];
+    pool.forEach(l => {
+        if (currentLesson && pool.length > 1 && l.id === currentLesson.id) return;
+        const wrongWeight = srsLessonWeights[l.id] || 0;
+        const weight = 1 + (l.flames >= 4 ? 2 : 0) + (wrongWeight * 5);
+        for (let i = 0; i < weight; i++) weightedPool.push(l);
+    });
+
+    return weightedPool[Math.floor(Math.random() * weightedPool.length)];
+}
+
+function startTimer() {
+    clearInterval(countdownTimer);
+    timeLeft = 45;
+    const timerEl = document.getElementById('timerDisplay');
+    timerEl.textContent = `⏱ ${timeLeft}s`;
+
+    countdownTimer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = `⏱ ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            clearInterval(countdownTimer);
+            if (!isSubmitted) {
+                submitExam();
+            }
+        }
+    }, 1000);
+}
+
+function speakText(text, event) {
+    if (event) event.stopPropagation();
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-GB';
+    utter.rate = 0.95;
+    window.speechSynthesis.speak(utter);
+}
+
+function reloadBankOrder() {
+    if (!currentLesson) return;
+    userSelections = [null, null, null, null];
+    activeSlot = 0;
+    isSubmitted = false;
+    const shouldShuffle = document.getElementById('shuffleBankToggle').checked;
+    displayedOptions = shouldShuffle ? shuffleArray(currentLesson.options) : [...currentLesson.options];
+    renderLesson();
+}
+
+function loadNewLesson(specificLessonObj = null) {
+    isSubmitted = false;
+    userSelections = [null, null, null, null];
+    activeSlot = 0;
+    currentLesson = specificLessonObj || pickNextLesson();
+    const shouldShuffle = document.getElementById('shuffleBankToggle').checked;
+    displayedOptions = shouldShuffle ? shuffleArray(currentLesson.options) : [...currentLesson.options];
+    renderLesson();
+    startTimer();
+
+    if (document.getElementById('autoAudioToggle').checked) {
+        const cleanTopic = currentLesson.title.replace(/CHỦ ĐỀ \d+:\s*/i, '').replace(/\(2026\).*/i, '');
+        speakText(cleanTopic);
+    }
+}
+
+function setActiveSlot(slotIdx) {
+    if (isSubmitted) return;
+    activeSlot = slotIdx;
+    renderLesson();
+}
+
+function clearSlot(slotIdx, event) {
+    if (event) event.stopPropagation();
+    if (isSubmitted) return;
+    userSelections[slotIdx] = null;
+    activeSlot = slotIdx;
+    renderLesson();
+}
+
+// KHI HỌC SINH BẤM VÀO LỰA CHỌN TRONG QUESTION BANK -> ĐIỀN LẦN LƯỢT SPEAKER 1, 2, 3, 4
+function selectOptionFromBank(optIdx) {
+    if (isSubmitted) return;
+
+    // Nếu lựa chọn này đã được gán cho một Speaker khác, gỡ khỏi Speaker cũ
+    const existingSpeaker = userSelections.indexOf(optIdx);
+    if (existingSpeaker !== -1 && existingSpeaker !== activeSlot) {
+        userSelections[existingSpeaker] = null;
+    }
+
+    // Gán vào vị trí Speaker hiện tại
+    userSelections[activeSlot] = optIdx;
+
+    if (document.getElementById('autoAudioToggle').checked) {
+        speakText(displayedOptions[optIdx].en);
+    }
+
+    // Tự động chuyển sang vị trí Speaker tiếp theo còn trống (1 -> 2 -> 3 -> 4)
+    let nextEmpty = -1;
+    for (let i = 1; i <= 4; i++) {
+        const checkIdx = (activeSlot + i) % 4;
+        if (userSelections[checkIdx] === null) {
+            nextEmpty = checkIdx;
+            break;
+        }
+    }
+
+    if (nextEmpty !== -1) {
+        activeSlot = nextEmpty;
+        renderLesson();
+    } else {
+        // Đã chọn đủ cả 4 vị trí Speaker 1, 2, 3, 4 -> Chấm điểm ngay
+        renderLesson();
+        submitExam();
+    }
+}
+
+function handleDropdownChange(slotIdx, val) {
+    if (isSubmitted) return;
+    if (val === "") {
+        userSelections[slotIdx] = null;
+    } else {
+        const optIdx = parseInt(val);
+        userSelections[slotIdx] = optIdx;
+        if (document.getElementById('autoAudioToggle').checked) {
+            speakText(displayedOptions[optIdx].en);
+        }
+    }
+    renderLesson();
+}
+
+function renderLesson() {
+    if (!currentLesson) return;
+    const showVi = document.getElementById('showViToggle').checked;
+    const isDropdownMode = document.getElementById('dropdownModeToggle').checked;
+    const container = document.getElementById('quizContainer');
+
+    const debtCount = srsLessonWeights[currentLesson.id] || 0;
+    const debtBadge = debtCount > 0 ? `<span style="color:var(--danger); font-size:0.85rem;">• Đang nợ (${debtCount})</span>` : '';
+    const flamesHTML = currentLesson.flames > 0 ? "🔥".repeat(currentLesson.flames) : '<span style="font-size:0.8rem; color:var(--subtext)">Chủ đề bổ trợ</span>';
+
+    // 1. BẢNG QUESTION BANK – CHỌN ĐÁP ÁN (GIỐNG TRONG FILE PDF)
+    let questionBankHTML = "";
+    if (!isDropdownMode) {
+        let bankItemsHTML = displayedOptions.map((opt, oIdx) => {
+            const assignedSpeakerIdx = userSelections.indexOf(oIdx);
+            const isUsed = assignedSpeakerIdx !== -1;
+            const escapedEn = opt.en.replace(/'/g, "\\'");
+
+            return `
+                <button class="qb-item ${isUsed ? 'used-item' : ''}" onclick="selectOptionFromBank(${oIdx})" ${isSubmitted ? 'disabled' : ''}>
+                    <div>
+                        <span class="qb-item-en">${opt.en}</span>
+                        ${isUsed ? `<span class="assigned-pill">Speaker ${assignedSpeakerIdx + 1}</span>` : ''}
+                        ${showVi ? `<span class="qb-item-vi">${opt.vi}</span>` : ''}
+                    </div>
+                    <span class="speak-icon" onclick="speakText('${escapedEn}', event)" title="Nghe phát âm">🔊</span>
+                </button>
+            `;
+        }).join('');
+
+        questionBankHTML = `
+            <div class="question-bank-box">
+                <div class="qb-top-prompt">
+                    <span>Chọn đáp án...</span>
+                    ${!isSubmitted ? `<span style="color:var(--primary)">👉 Đang chọn cho: <strong>Speaker ${activeSlot + 1}</strong></span>` : ''}
+                </div>
+                <div class="qb-blue-bar">QUESTION BANK – CHỌN ĐÁP ÁN</div>
+                <div class="qb-list">
+                    ${bankItemsHTML}
+                </div>
+            </div>
+        `;
+    }
+
+    // 2. DANH SÁCH 4 SPEAKER (14.1 -> 14.4)
+    let speakersHTML = currentLesson.answers.map((ans, sIdx) => {
+        const selectedOptIdx = userSelections[sIdx];
+        const selectedOpt = selectedOptIdx !== null ? displayedOptions[selectedOptIdx] : null;
+        const isCorrect = isSubmitted && selectedOpt && selectedOpt.en.toLowerCase() === ans.en.toLowerCase();
+
+        let slotClass = "speaker-slot";
+        if (isSubmitted) {
+            slotClass += isCorrect ? " correct-slot" : " wrong-slot";
+        } else {
+            if (sIdx === activeSlot && !isDropdownMode) slotClass += " active-slot";
+            else if (selectedOpt) slotClass += " filled-slot";
+        }
+
+        let innerContent = "";
+        if (isDropdownMode && !isSubmitted) {
+            let dropdownOpts = `<option value="">Chọn đáp án...</option>`;
+            displayedOptions.forEach((o, oIdx) => {
+                const isSelected = selectedOptIdx === oIdx ? "selected" : "";
+                dropdownOpts += `<option value="${oIdx}" ${isSelected}>${o.en} ${showVi ? `(${o.vi})` : ''}</option>`;
+            });
+            innerContent = `<select class="exam-dropdown" onchange="handleDropdownChange(${sIdx}, this.value)">${dropdownOpts}</select>`;
+        } else {
+            if (selectedOpt) {
+                innerContent = `
+                    <div>Đáp án chọn: <span class="slot-en">${selectedOpt.en}</span></div>
+                    ${showVi ? `<span class="slot-vi">Nghĩa: ${selectedOpt.vi}</span>` : ''}
+                `;
+            } else {
+                innerContent = `<div class="slot-placeholder">${sIdx === activeSlot ? '👉 Bấm vào 1 câu trong Question Bank ở trên để điền...' : 'Chưa chọn (Bấm vào đây nếu muốn chọn trước)'}</div>`;
+            }
+        }
+
+        let correctionHTML = "";
+        if (isSubmitted && !isCorrect) {
+            correctionHTML = `<div class="slot-correction">✔ Đáp án đúng: <u>${ans.en}</u> ${showVi ? `— <em>${ans.vi}</em>` : ''}</div>`;
+        }
+
+        const escapedAnsEn = ans.en.replace(/'/g, "\\'");
+
+        return `
+            <div class="${slotClass}" onclick="setActiveSlot(${sIdx})">
+                <div class="slot-left">
+                    <span class="speaker-tag">${ans.sp}</span>
+                    <div class="slot-content">
+                        ${innerContent}
+                        ${correctionHTML}
+                    </div>
+                </div>
+                ${(!isSubmitted && !isDropdownMode && selectedOpt)
+                    ? `<button class="clear-slot-btn" onclick="clearSlot(${sIdx}, event)" title="Xoá lựa chọn này">✕</button>`
+                    : `<span class="speak-icon" onclick="speakText('${escapedAnsEn}', event)" title="Nghe đáp án đúng">🔊</span>`
+                }
+            </div>
+        `;
+    }).join('');
+
+    container.innerHTML = `
+        <div class="topic-header">
+            <div class="topic-title">
+                <span>${currentLesson.title} ${debtBadge}</span>
+                <span>${flamesHTML}</span>
+            </div>
+            ${showVi ? `<div class="topic-vi"><strong>Nghĩa chủ đề:</strong> <em>${currentLesson.topicVi}</em></div>` : ''}
+        </div>
+
+        ${questionBankHTML}
+
+        <div class="speakers-section-title">
+            <span>Thứ tự người nói (Lần lượt chọn Speaker 1 ➔ 2 ➔ 3 ➔ 4):</span>
+            <span style="font-size:0.8rem;">Trang ${currentLesson.id} / 31</span>
+        </div>
+
+        <div class="speakers-grid">
+            ${speakersHTML}
+        </div>
+
+        <div class="action-bar">
+            ${!isSubmitted
+                ? `<button class="btn-primary" onclick="submitExam()">✔ Chấm điểm (Hoặc chọn đủ 4 Speaker)</button>`
+                : `<button class="btn-outline" onclick="retryCurrentLesson()">🔄 Làm lại chủ đề này</button>
+                   <button class="btn-primary" onclick="nextLesson()">Chủ đề tiếp theo ➔</button>`
+            }
+        </div>
+
+        <div class="feedback-box ${isSubmitted ? 'show' : ''}" id="feedbackBox">
+            <div id="feedbackSummary"></div>
+        </div>
+    `;
+}
+
+function submitExam() {
+    if (isSubmitted) return;
+    isSubmitted = true;
+    clearInterval(countdownTimer);
+
+    let correctCount = 0;
+    currentLesson.answers.forEach((ans, sIdx) => {
+        const selectedOptIdx = userSelections[sIdx];
+        const selectedOpt = selectedOptIdx !== null ? displayedOptions[selectedOptIdx] : null;
+        if (selectedOpt && selectedOpt.en.toLowerCase() === ans.en.toLowerCase()) {
+            correctCount++;
+        }
+    });
+
+    stats.total += 4;
+    stats.correct += correctCount;
+
+    if (correctCount === 4) {
+        if (srsLessonWeights[currentLesson.id]) {
+            srsLessonWeights[currentLesson.id]--;
+            if (srsLessonWeights[currentLesson.id] <= 0) delete srsLessonWeights[currentLesson.id];
+        }
+    } else {
+        srsLessonWeights[currentLesson.id] = (srsLessonWeights[currentLesson.id] || 0) + 2;
+    }
+
+    saveState();
+    renderLesson();
+
+    const fbSummary = document.getElementById('feedbackSummary');
+    if (correctCount === 4) {
+        fbSummary.innerHTML = `<strong style="color:var(--success); font-size:1rem;">🎉 Chính xác tuyệt đối 4/4 vị trí Speaker!</strong>`;
+    } else {
+        fbSummary.innerHTML = `<strong style="color:var(--danger); font-size:1rem;">📌 Kết quả: Đúng ${correctCount}/4 vị trí. (Hệ thống đã lưu chủ đề này vào mục "Chủ đề làm sai" để bạn ôn lại)</strong>`;
+    }
+}
+
+function retryCurrentLesson() {
+    loadNewLesson(currentLesson);
+}
+
+function setMode(mode) {
+    currentMode = mode;
+    selectedLessonId = 'all';
+    document.getElementById('lessonSelect').value = 'all';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${mode}`).classList.add('active');
+    loadNewLesson();
+}
+
+function selectSpecificLesson(val) {
+    selectedLessonId = val;
+    loadNewLesson();
+}
+
+function prevLesson() {
+    const currIdx = LESSONS_DATA.findIndex(l => l.id === currentLesson.id);
+    const prevIdx = (currIdx - 1 + LESSONS_DATA.length) % LESSONS_DATA.length;
+    selectedLessonId = LESSONS_DATA[prevIdx].id;
+    document.getElementById('lessonSelect').value = selectedLessonId;
+    loadNewLesson(LESSONS_DATA[prevIdx]);
+}
+
+function nextLesson() {
+    if (selectedLessonId === 'all') {
+        loadNewLesson();
+    } else {
+        const currIdx = LESSONS_DATA.findIndex(l => l.id === currentLesson.id);
+        const nextIdx = (currIdx + 1) % LESSONS_DATA.length;
+        selectedLessonId = LESSONS_DATA[nextIdx].id;
+        document.getElementById('lessonSelect').value = selectedLessonId;
+        loadNewLesson(LESSONS_DATA[nextIdx]);
+    }
+}
+
+function resetProgress() {
+    if (confirm("Bạn muốn xoá toàn bộ điểm số và lịch sử câu sai để luyện lại từ đầu?")) {
+        srsLessonWeights = {};
+        stats = { correct: 0, total: 0 };
+        saveState();
+        loadNewLesson();
+    }
+}
+
+// KHỞI CHẠY ỨNG DỤNG
+initDropdown();
+updateStatsUI();
+loadNewLesson();
+</script>
+</body>
+</html>
