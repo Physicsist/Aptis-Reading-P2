@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APTIS LISTENING – PART 2 (2026) — Luyện Tập & Chấm Điểm</title>
+  <style>
+    :root {
+      --primary: #0b63ce;
+      --primary-dark: #084b9e;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #dbe3ee;
+      --text: #0f172a;
+      --muted: #475569;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 24px 16px 64px;
+      font-family: "Times New Roman", Times, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--card);
+      padding: 32px 36px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      margin: 0 0 16px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .intro-box {
+      background: #eef6fa;
+      border: 1px solid #cbd5e1;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      font-size: 16px;
+    }
+    .scoreboard {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .scoreboard-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .stat-correct { color: var(--success); }
+    .stat-wrong { color: var(--danger); }
+    .stat-rate { color: var(--primary); }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .toolbar input[type="search"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      font-size: 13px;
+      border-radius: 4px;
+    }
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .btn {
+      padding: 8px 12px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      font-family: system-ui, -apple-system, sans-serif;
+      transition: all 0.15s;
+    }
+    .btn:hover {
+      background: #f1f5f9;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+    .btn-success {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+    .btn-success:hover {
+      background: #047857;
+    }
+    .topic-block {
+      margin-bottom: 40px;
+      page-break-inside: avoid;
+      border: 1px solid #e2e8f0;
+      padding: 22px 24px;
+      background: #ffffff;
+    }
+    .topic-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .topic-title {
+      font-size: 19px;
+      font-weight: bold;
+      margin: 0 0 4px;
+    }
+    .topic-meaning {
+      font-size: 16px;
+      margin: 0;
+    }
+    .topic-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .topic-score-banner {
+      display: none;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 4px;
+    }
+    .topic-score-banner.show {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topic-score-banner.perfect {
+      background: var(--success-bg);
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .topic-score-banner.partial {
+      background: var(--warning-bg);
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    .topic-score-banner.low {
+      background: var(--danger-bg);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+    .bank-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+      border: 1px solid #d1d5db;
+    }
+    .bank-header {
+      background: #0b63ce;
+      color: #ffffff;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 15px;
+    }
+    .bank-row td {
+      padding: 9px 14px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 16px;
+    }
+    .speaker-item {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      transition: all 0.15s;
+    }
+    .speaker-item.graded-correct {
+      background: var(--success-bg);
+      border-color: #6ee7b7;
+    }
+    .speaker-item.graded-wrong {
+      background: var(--danger-bg);
+      border-color: #fca5a5;
+    }
+    .speaker-item.graded-empty {
+      background: var(--warning-bg);
+      border-color: #fcd34d;
+    }
+    .speaker-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .speaker-label {
+      font-weight: bold;
+      font-size: 16px;
+      min-width: 135px;
+    }
+    .speaker-control-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      justify-content: flex-end;
+    }
+    .speaker-select {
+      padding: 7px 12px;
+      font-size: 15px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      min-width: 280px;
+      max-width: 100%;
+      font-family: inherit;
+      cursor: pointer;
+    }
+    .speaker-select.correct {
+      border: 2px solid var(--success);
+      color: #065f46;
+      font-weight: bold;
+    }
+    .speaker-select.wrong {
+      border: 2px solid var(--danger);
+      color: #991b1b;
+      font-weight: bold;
+    }
+    .status-badge {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: none;
+      white-space: nowrap;
+    }
+    .status-badge.correct {
+      display: inline-block;
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status-badge.wrong {
+      display: inline-block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .status-badge.empty {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .answer-details {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #cbd5e1;
+      font-size: 16px;
+    }
+    .answer-details.hidden {
+      display: none;
+    }
+    .user-wrong-choice {
+      color: var(--danger);
+      font-size: 14px;
+      margin-bottom: 3px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .answer-en {
+      font-weight: bold;
+      color: #0f172a;
+    }
+    .answer-en u {
+      text-decoration: underline;
+    }
+    .answer-vi {
+      margin-top: 2px;
+    }
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+      .container {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+      }
+      .scoreboard, .topic-actions {
+        display: none !important;
+      }
+      .topic-block {
+        page-break-after: always;
+        border: none;
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>APTIS LISTENING – PART 2</h1>
+    <div class="intro-box">
+      <strong>Dạng bài:</strong> Nghe 4 người nói cùng một chủ đề và ghép mỗi người với một ý kiến phù hợp trong Question Bank. Chọn đáp án ở từng Speaker để hệ thống tự động chấm đúng/sai hoặc nhấn <strong>Chấm Điểm</strong>.
+    </div>
+
+    <div class="scoreboard">
+      <div class="scoreboard-top">
+        <div class="stats-row">
+          <span>Tổng: 31 Chủ đề (124 câu)</span>
+          <span>·</span>
+          <span id="statAttempted">Đã chọn: 0/124</span>
+          <span>·</span>
+          <span class="stat-correct" id="statCorrect">✓ Đúng: 0</span>
+          <span>·</span>
+          <span class="stat-wrong" id="statWrong">✗ Sai: 0</span>
+          <span>·</span>
+          <span class="stat-rate" id="statAccuracy">Tỷ lệ đúng: 0%</span>
+        </div>
+      </div>
+      <div class="toolbar">
+        <input type="search" id="searchInput" placeholder="Tìm nhanh chủ đề hoặc đáp án (VD: museum, exercise, shopping)..." />
+        <div class="toolbar-actions">
+          <button class="btn btn-success" id="gradeAllBtn">✓ Chấm Điểm Toàn Bộ</button>
+          <button class="btn btn-primary" id="toggleAnswersBtn">👁 Hiện / Ẩn Đáp Án</button>
+          <button class="btn" id="resetPracticeBtn">↻ Làm Lại Từ Đầu</button>
+          <button class="btn" onclick="window.print()">🖨 In / Lưu PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="topicsContainer"></div>
+  </div>
+
+  <script>
+    const TOPICS = [
+  {
+    "id": 1,
+    "title": "Visiting a new museum (2026)",
+    "meaningVi": "Tham quan một bảo tàng mới",
+    "flames": 3,
+    "questionBank": [
+      "Bought souvenirs at the museum",
+      "Finished the visit quickly",
+      "Enjoyed the use of technology",
+      "Found the exhibits boring",
+      "Got lost during the visit",
+      "Wants to visit again"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Finished the visit quickly",
+        "meaningVi": "Kết thúc chuyến tham quan nhanh chóng"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Got lost during the visit",
+        "meaningVi": "Bị lạc trong lúc tham quan"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Enjoyed the use of technology",
+        "meaningVi": "Thích việc sử dụng công nghệ"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Wants to visit again",
+        "meaningVi": "Muốn quay lại tham quan lần nữa"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Doing exercises (2026)",
+    "meaningVi": "Tập thể dục",
+    "flames": 5,
+    "questionBank": [
+      "Exercise outdoors every day",
+      "Exercise to lose weight",
+      "Have fun exercising with others",
+      "Improve work performance",
+      "Hate exercising",
+      "Find exercise tiring"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Improve work performance",
+        "meaningVi": "Cải thiện hiệu suất làm việc"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Find exercise tiring",
+        "meaningVi": "Thấy việc tập thể dục mệt mỏi"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Have fun exercising with others",
+        "meaningVi": "Cảm thấy vui khi tập thể dục cùng người khác"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Hate exercising",
+        "meaningVi": "Ghét tập thể dục"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Their protecting the environment (2026)",
+    "meaningVi": "Cách họ bảo vệ môi trường",
+    "flames": 5,
+    "questionBank": [
+      "protects the environment by using reusable bags.",
+      "protects the environment by recycling at home.",
+      "protects the environment by using less electricity.",
+      "protects the environment by not driving to work.",
+      "protects the environment by using less water.",
+      "protects the environment by shopping online."
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "protects the environment by using less electricity.",
+        "meaningVi": "Bảo vệ môi trường bằng cách sử dụng ít điện hơn"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "protects the environment by not driving to work",
+        "meaningVi": "Bảo vệ môi trường bằng cách không lái xe đi làm"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "protects the environment by shopping online.",
+        "meaningVi": "Bảo vệ môi trường bằng cách mua sắm trực tuyến"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "protects the environment by using less water.",
+        "meaningVi": "Bảo vệ môi trường bằng cách sử dụng ít nước hơn"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Doing arts (2026)",
+    "meaningVi": "Tham gia các hoạt động nghệ thuật",
+    "flames": 2,
+    "questionBank": [
+      "Doing arts with children",
+      "Doing arts as part of the job",
+      "Doing arts to relax",
+      "Doing arts alone",
+      "Doing arts outdoors",
+      "Doing as a social activity"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Doing as a social activity",
+        "meaningVi": "Làm nghệ thuật như một hoạt động giao lưu xã hội"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Doing arts with children",
+        "meaningVi": "Làm nghệ thuật cùng trẻ em"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Doing arts as part of the job",
+        "meaningVi": "Làm nghệ thuật như một phần của công việc"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Doing arts alone",
+        "meaningVi": "Làm nghệ thuật một mình"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Online shopping (Version 2) (2026)",
+    "meaningVi": "Mua sắm trực tuyến (Phiên bản 2)",
+    "flames": 4,
+    "questionBank": [
+      "Products are delivered",
+      "It saves time",
+      "Can compare customer reviews",
+      "Avoids crowded shops",
+      "It is cheaper",
+      "There are more choices"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "It saves time",
+        "meaningVi": "Tiết kiệm thời gian"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "It is cheaper",
+        "meaningVi": "Rẻ hơn"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Products are delivered",
+        "meaningVi": "Sản phẩm được giao tận nơi"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "There are more choices",
+        "meaningVi": "Có nhiều lựa chọn hơn"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Studying habit (2026)",
+    "meaningVi": "Thói quen học tập",
+    "flames": 4,
+    "questionBank": [
+      "Prefer to study in a quiet place",
+      "Prefer to study early in the morning",
+      "Prefer to study with music",
+      "Prefer to study at various places",
+      "Prefer to study late at night",
+      "Prefer to study with a friend"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Prefer to study late at night",
+        "meaningVi": "Thích học vào đêm muộn"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Prefer to study at various places",
+        "meaningVi": "Thích học ở nhiều địa điểm khác nhau"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Prefer to study with music",
+        "meaningVi": "Thích học khi có nhạc"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Prefer to study in a quiet place",
+        "meaningVi": "Thích học ở nơi yên tĩnh"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Their journey to work (2026)",
+    "meaningVi": "Cách họ đi làm",
+    "flames": 4,
+    "questionBank": [
+      "Go by bus",
+      "Take a taxi",
+      "Ride a bicycle",
+      "Walk with friends",
+      "Walk alone",
+      "Drive car"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Walk with friends",
+        "meaningVi": "Đi bộ cùng bạn bè"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Go by bus",
+        "meaningVi": "Đi bằng xe buýt"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Walk alone",
+        "meaningVi": "Đi bộ một mình"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Drive car",
+        "meaningVi": "Lái ô tô"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Shopping online (2026)",
+    "meaningVi": "Mua sắm trực tuyến",
+    "flames": 4,
+    "questionBank": [
+      "products are delivered",
+      "it saves time",
+      "it is cheaper",
+      "it has more choices",
+      "avoids crowded shops",
+      "can compare customer reviews"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "products are delivered",
+        "meaningVi": "Sản phẩm được giao tận nơi"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "it is cheaper",
+        "meaningVi": "Rẻ hơn"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "it saves time",
+        "meaningVi": "Tiết kiệm thời gian"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "it has more choices",
+        "meaningVi": "Có nhiều lựa chọn hơn"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Protecting the environment (2026)",
+    "meaningVi": "Bảo vệ môi trường",
+    "flames": 5,
+    "questionBank": [
+      "Using less electricity",
+      "Wasting more energy",
+      "Using less water",
+      "Not driving to work",
+      "Buying imported goods",
+      "Shopping online"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Shopping online",
+        "meaningVi": "Mua sắm trực tuyến"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Not driving to work",
+        "meaningVi": "Không lái xe đi làm"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Using less electricity",
+        "meaningVi": "Sử dụng ít điện hơn"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Using less water",
+        "meaningVi": "Sử dụng ít nước hơn"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Running",
+    "meaningVi": "Chạy bộ",
+    "flames": 0,
+    "questionBank": [
+      "prefer running in the street",
+      "at the seaside",
+      "in the fitness center",
+      "in the countryside",
+      "on the running track",
+      "in a park"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "prefer running in the street",
+        "meaningVi": "Thích chạy bộ trên đường phố"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "at the seaside",
+        "meaningVi": "Ở bờ biển"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "on the running track",
+        "meaningVi": "Trên đường chạy"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "in the fitness center",
+        "meaningVi": "Trong trung tâm thể hình"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "title": "Their purposes of using the Internet (2026)",
+    "meaningVi": "Mục đích sử dụng Internet của họ",
+    "flames": 4,
+    "questionBank": [
+      "listen to music",
+      "shop online",
+      "watch film",
+      "communicate with friends",
+      "complete school assignments",
+      "find transport information"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "watch film",
+        "meaningVi": "Xem phim"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "communicate with friends",
+        "meaningVi": "Giao tiếp với bạn bè"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "complete school assignments",
+        "meaningVi": "Hoàn thành bài tập ở trường"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "find transport information",
+        "meaningVi": "Tìm thông tin giao thông"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "When they like listening to music (2026)",
+    "meaningVi": "Khi họ thích nghe nhạc",
+    "flames": 3,
+    "questionBank": [
+      "While studying",
+      "To relax",
+      "While singing",
+      "While travelling",
+      "Before going to sleep",
+      "After waking up"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "To relax",
+        "meaningVi": "Để thư giãn"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "While studying",
+        "meaningVi": "Trong khi học"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "While singing",
+        "meaningVi": "Trong khi hát"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "After waking up",
+        "meaningVi": "Sau khi thức dậy"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Protecting the environment (Version 2) (2026)",
+    "meaningVi": "Bảo vệ môi trường (Phiên bản 2)",
+    "flames": 5,
+    "questionBank": [
+      "Give away used items",
+      "Plant trees in the backyard",
+      "Buy environmentally friendly products",
+      "Reuse containers for storing food",
+      "Does not use commercial cleaning products",
+      "Use solar panels for electricity"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Does not use commercial cleaning products",
+        "meaningVi": "Không sử dụng các sản phẩm tẩy rửa thương mại"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Give away used items",
+        "meaningVi": "Cho/tặng lại những đồ đã qua sử dụng"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Buy environmentally friendly products",
+        "meaningVi": "Mua các sản phẩm thân thiện với môi trường"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Reuse containers for storing food",
+        "meaningVi": "Tái sử dụng hộp để đựng thực phẩm"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Protecting the environment (Version 3) (2026)",
+    "meaningVi": "Bảo vệ môi trường (Phiên bản 3)",
+    "flames": 5,
+    "questionBank": [
+      "Reuse containers for storing food",
+      "Use solar panels for electricity",
+      "Does not use commercial cleaning products",
+      "Give away used items",
+      "Buy environmentally friendly products",
+      "Plant trees in the backyard"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Give away used items",
+        "meaningVi": "Cho/tặng lại những đồ đã qua sử dụng"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Buy environmentally friendly products",
+        "meaningVi": "Mua các sản phẩm thân thiện với môi trường"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Reuse containers for storing food",
+        "meaningVi": "Tái sử dụng hộp để đựng thực phẩm"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Does not use commercial cleaning products",
+        "meaningVi": "Không sử dụng các sản phẩm tẩy rửa thương mại"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "Online shopping (Version 2) (2026) – Bộ 2",
+    "meaningVi": "Mua sắm trực tuyến (Phiên bản 2)",
+    "flames": 4,
+    "questionBank": [
+      "There are more choices",
+      "It is cheaper",
+      "It increases efficiency",
+      "The products are delivered",
+      "It saves time",
+      "It provides better customer service"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "The products are delivered",
+        "meaningVi": "Sản phẩm được giao tận nơi"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "It is cheaper",
+        "meaningVi": "Rẻ hơn"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "It saves time",
+        "meaningVi": "Tiết kiệm thời gian"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "There are more choices",
+        "meaningVi": "Có nhiều lựa chọn hơn"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "Listening to music (2026)",
+    "meaningVi": "Nghe nhạc",
+    "flames": 3,
+    "questionBank": [
+      "After waking up",
+      "To relax",
+      "While singing",
+      "While studying",
+      "While travelling",
+      "Before going to sleep"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "To relax",
+        "meaningVi": "Để thư giãn"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "After waking up",
+        "meaningVi": "Sau khi thức dậy"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "While singing",
+        "meaningVi": "Trong khi hát"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "While studying",
+        "meaningVi": "Trong khi học"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "title": "Outdoor activities (2026)",
+    "meaningVi": "Các hoạt động ngoài trời",
+    "flames": 3,
+    "questionBank": [
+      "going for a run",
+      "climbing",
+      "mountain biking",
+      "horse riding",
+      "hiking",
+      "camping in the forest"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "horse riding",
+        "meaningVi": "Cưỡi ngựa"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "going for a run",
+        "meaningVi": "Đi chạy bộ"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "hiking",
+        "meaningVi": "Đi bộ đường dài"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "mountain biking",
+        "meaningVi": "Đạp xe địa hình"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "title": "Places to run (2026)",
+    "meaningVi": "Những nơi để chạy bộ",
+    "flames": 4,
+    "questionBank": [
+      "on the running track",
+      "at the seaside",
+      "in the countryside",
+      "in a park",
+      "in the street",
+      "in the fitness centre"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "in the fitness centre",
+        "meaningVi": "Trong trung tâm thể hình"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "at the seaside",
+        "meaningVi": "Ở bờ biển"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "in the street",
+        "meaningVi": "Trên đường phố"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "on the running track",
+        "meaningVi": "Trên đường chạy"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "title": "Doing exercise (2026)",
+    "meaningVi": "Tập thể dục",
+    "flames": 5,
+    "questionBank": [
+      "help improve work performance",
+      "find exercise tiring",
+      "hate exercising",
+      "has fun when exercising with friends",
+      "exercise outdoors every day",
+      "exercise to lose weight"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "hate exercising",
+        "meaningVi": "Ghét tập thể dục"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "help improve work performance",
+        "meaningVi": "Giúp cải thiện hiệu suất làm việc"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "find exercise tiring",
+        "meaningVi": "Thấy việc tập thể dục mệt mỏi"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "has fun when exercising with friends",
+        "meaningVi": "Cảm thấy vui khi tập thể dục cùng bạn bè"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "title": "The Internet (2026)",
+    "meaningVi": "Internet",
+    "flames": 4,
+    "questionBank": [
+      "listen to the radio",
+      "complete assignments",
+      "buy groceries online",
+      "find transport information",
+      "watch films",
+      "communicate with friends"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "watch films",
+        "meaningVi": "Xem phim"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "communicate with friends",
+        "meaningVi": "Giao tiếp với bạn bè"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "complete assignments",
+        "meaningVi": "Hoàn thành bài tập"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "find transport information",
+        "meaningVi": "Tìm thông tin giao thông"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "title": "Art (2026)",
+    "meaningVi": "Nghệ thuật",
+    "flames": 2,
+    "questionBank": [
+      "as part of their job",
+      "alone",
+      "with children",
+      "stay at home",
+      "social activity",
+      "together"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "social activity",
+        "meaningVi": "Hoạt động giao lưu xã hội"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "with children",
+        "meaningVi": "Cùng trẻ em"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "as part of their job",
+        "meaningVi": "Như một phần công việc của họ"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "alone",
+        "meaningVi": "Một mình"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "title": "Transportation to work (2026)",
+    "meaningVi": "Phương tiện/cách đi làm",
+    "flames": 4,
+    "questionBank": [
+      "travel by car",
+      "walk alone",
+      "ride a bicycle",
+      "travel by bus",
+      "take a taxi",
+      "walk with a friend"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "travel by bus",
+        "meaningVi": "Đi làm bằng xe buýt"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "travel by car",
+        "meaningVi": "Đi làm bằng ô tô"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "walk alone",
+        "meaningVi": "Đi bộ một mình"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "walk with a friend",
+        "meaningVi": "Đi bộ cùng một người bạn"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "title": "Studying (Version 2) (2026)",
+    "meaningVi": "Học tập (Phiên bản 2)",
+    "flames": 4,
+    "questionBank": [
+      "Late at night",
+      "With background noise",
+      "Early in the morning",
+      "With music",
+      "In a quiet place",
+      "In various places"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "In various places",
+        "meaningVi": "Ở nhiều nơi khác nhau"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "In a quiet place",
+        "meaningVi": "Ở nơi yên tĩnh"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "With music",
+        "meaningVi": "Khi có nhạc"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Late at night",
+        "meaningVi": "Vào đêm muộn"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "title": "Studying (2026)",
+    "meaningVi": "Học tập",
+    "flames": 4,
+    "questionBank": [
+      "At home",
+      "In the coffee shop",
+      "In the park",
+      "In a shared workspace",
+      "On public transport",
+      "While traveling abroad"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "In the coffee shop",
+        "meaningVi": "Ở quán cà phê"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "In the park",
+        "meaningVi": "Ở công viên"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "On public transport",
+        "meaningVi": "Trên phương tiện giao thông công cộng"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "At home",
+        "meaningVi": "Ở nhà"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "title": "Restaurant experiences",
+    "meaningVi": "Trải nghiệm tại nhà hàng",
+    "flames": 0,
+    "questionBank": [
+      "Enjoyed a live performance",
+      "Ordered the wrong dish",
+      "Was still hungry after dinner",
+      "Met a successful staff member",
+      "Read reviews before visiting",
+      "Tried the famous chicken dish"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "Was still hungry after dinner",
+        "meaningVi": "Vẫn còn đói sau bữa tối"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "Ordered the wrong dish",
+        "meaningVi": "Gọi nhầm món"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "Met a successful staff member",
+        "meaningVi": "Gặp một nhân viên thành đạt"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "Enjoyed a live performance",
+        "meaningVi": "Thích một buổi biểu diễn trực tiếp"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "title": "Restaurant experience",
+    "meaningVi": "Trải nghiệm tại nhà hàng",
+    "flames": 0,
+    "questionBank": [
+      "met a successful staff member",
+      "was still hungry after dinner",
+      "read reviews before visiting",
+      "tried the famous chicken dish",
+      "ordered the wrong dish",
+      "watched a nice performance"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "was still hungry after dinner",
+        "meaningVi": "Vẫn còn đói sau bữa tối"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "ordered the wrong dish",
+        "meaningVi": "Gọi nhầm món"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "met a successful staff member",
+        "meaningVi": "Gặp một nhân viên thành đạt"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "watched a nice performance",
+        "meaningVi": "Xem một buổi biểu diễn hay"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "title": "Sport",
+    "meaningVi": "Thể thao",
+    "flames": 0,
+    "questionBank": [
+      "plays in a team sport",
+      "does sports on a bicycle",
+      "plays in the street",
+      "plays sport indoors",
+      "spends time in the water",
+      "does sports with animals"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "plays in a team sport",
+        "meaningVi": "Chơi một môn thể thao đồng đội"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "spends time in the water",
+        "meaningVi": "Tham gia hoạt động thể thao dưới nước"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "plays in the street",
+        "meaningVi": "Chơi thể thao ngoài đường"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "does sports with animals",
+        "meaningVi": "Chơi thể thao cùng động vật"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "title": "Reading books (2026)",
+    "meaningVi": "Đọc sách",
+    "flames": 3,
+    "questionBank": [
+      "read books in the library",
+      "read when travelling to school",
+      "prefer reading comics",
+      "prefer another activity to reading books",
+      "don't have time to read",
+      "read on their beds"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "read when travelling to school",
+        "meaningVi": "Đọc sách khi đi đến trường"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "don't have time to read",
+        "meaningVi": "Không có thời gian đọc sách"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "read on their beds",
+        "meaningVi": "Đọc sách trên giường"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "prefer another activity to reading books",
+        "meaningVi": "Thích một hoạt động khác hơn là đọc sách"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "title": "Reading books (2026) - Additional set",
+    "meaningVi": "Đọc sách (Bộ bổ sung)",
+    "flames": 3,
+    "questionBank": [
+      "read when travelling to school",
+      "read on their beds",
+      "don't have time to read",
+      "prefer another activity to reading books",
+      "read books in the library",
+      "prefer reading comics"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "read when travelling to school",
+        "meaningVi": "Đọc sách khi đi đến trường"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "don't have time to read",
+        "meaningVi": "Không có thời gian đọc sách"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "read on their beds",
+        "meaningVi": "Đọc sách trên giường"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "prefer another activity to reading books",
+        "meaningVi": "Thích một hoạt động khác hơn là đọc sách"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "title": "Discussing their restaurant experiences",
+    "meaningVi": "Thảo luận về trải nghiệm tại nhà hàng của họ",
+    "flames": 0,
+    "questionBank": [
+      "liked the restaurant decor",
+      "was still hungry after dinner",
+      "paid a high price",
+      "met the helpful staff",
+      "watched a perfect performance",
+      "complained about slow service"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "was still hungry after dinner",
+        "meaningVi": "Vẫn còn đói sau bữa tối"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "paid a high price",
+        "meaningVi": "Trả mức giá cao"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "met the helpful staff",
+        "meaningVi": "Gặp nhân viên nhiệt tình, hữu ích"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "watched a perfect performance",
+        "meaningVi": "Xem một màn biểu diễn tuyệt vời"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "title": "Shopping Habits (2026)",
+    "meaningVi": "Thói quen mua sắm",
+    "flames": 4,
+    "questionBank": [
+      "shops only on the internet",
+      "enjoys spending time in shopping centres",
+      "tries to save money",
+      "considers the environmental impact",
+      "buys products as soon as they see them",
+      "has limited time for shopping"
+    ],
+    "speakers": [
+      {
+        "speakerNumber": 1,
+        "code": "14.1",
+        "answer": "has limited time for shopping",
+        "meaningVi": "Có ít thời gian để mua sắm"
+      },
+      {
+        "speakerNumber": 2,
+        "code": "14.2",
+        "answer": "tries to save money",
+        "meaningVi": "Cố gắng tiết kiệm tiền"
+      },
+      {
+        "speakerNumber": 3,
+        "code": "14.3",
+        "answer": "considers the environmental impact",
+        "meaningVi": "Cân nhắc tác động đến môi trường"
+      },
+      {
+        "speakerNumber": 4,
+        "code": "14.4",
+        "answer": "shops only on the internet",
+        "meaningVi": "Chỉ mua sắm trên Internet"
+      }
+    ]
+  }
+];
+    let showAnswersGlobal = false;
+    const userSelections = {};
+    const gradedTopics = {};
+
+    function normalize(str) {
+      return (str || "").trim().toLowerCase();
+    }
+
+    function updateGlobalStats() {
+      let attempted = 0;
+      let correct = 0;
+      let wrong = 0;
+
+      TOPICS.forEach((topic) => {
+        topic.speakers.forEach((sp) => {
+          const key = topic.id + "-" + sp.speakerNumber;
+          const val = userSelections[key] || "";
+          if (val) {
+            attempted++;
+            if (normalize(val) === normalize(sp.answer)) {
+              correct++;
+            } else {
+              wrong++;
+            }
+          }
+        });
+      });
+
+      const rate = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+      document.getElementById("statAttempted").textContent = "Đã chọn: " + attempted + "/124";
+      document.getElementById("statCorrect").textContent = "✓ Đúng: " + correct;
+      document.getElementById("statWrong").textContent = "✗ Sai: " + wrong;
+      document.getElementById("statAccuracy").textContent = "Tỷ lệ đúng: " + rate + "%";
+    }
+
+    function renderTopics(filterText = "") {
+      const container = document.getElementById("topicsContainer");
+      const q = normalize(filterText);
+      container.innerHTML = "";
+
+      TOPICS.forEach((topic) => {
+        const matchTitle = normalize(topic.title).includes(q) || normalize(topic.meaningVi).includes(q);
+        const matchBank = topic.questionBank.some((opt) => normalize(opt).includes(q));
+        if (q && !matchTitle && !matchBank) return;
+
+        const flamesStr = topic.flames > 0 ? " " + "🔥".repeat(topic.flames) : "";
+        const block = document.createElement("div");
+        block.className = "topic-block";
+        block.id = "topic-block-" + topic.id;
+
+        const bankRowsHtml = topic.questionBank
+          .map((opt) => `<tr class="bank-row"><td>${opt}</td></tr>`)
+          .join("");
+
+        const isTopicGraded = !!gradedTopics[topic.id];
+        let topicCorrectCount = 0;
+        let topicAttemptedCount = 0;
+
+        const speakersHtml = topic.speakers
+          .map((sp) => {
+            const key = topic.id + "-" + sp.speakerNumber;
+            const selectedVal = userSelections[key] || "";
+            const isCorrect = selectedVal !== "" && normalize(selectedVal) === normalize(sp.answer);
+            const isWrong = selectedVal !== "" && !isCorrect;
+
+            if (selectedVal !== "") topicAttemptedCount++;
+            if (isCorrect) topicCorrectCount++;
+
+            const optionsHtml = [
+              '<option value="">Chọn đáp án...</option>',
+              ...topic.questionBank.map((opt) => {
+                const isSelected = selectedVal === opt ? "selected" : "";
+                return `<option value="${opt.replace(/"/g, '&quot;')}" ${isSelected}>${opt}</option>`;
+              }),
+            ].join("");
+
+            let itemClass = "speaker-item";
+            let selectClass = "speaker-select";
+            let badgeClass = "status-badge";
+            let badgeText = "";
+
+            if (isCorrect) {
+              itemClass += " graded-correct";
+              selectClass += " correct";
+              badgeClass += " correct";
+              badgeText = "✓ ĐÚNG";
+            } else if (isWrong) {
+              itemClass += " graded-wrong";
+              selectClass += " wrong";
+              badgeClass += " wrong";
+              badgeText = "✗ SAI";
+            } else if (isTopicGraded) {
+              itemClass += " graded-empty";
+              badgeClass += " empty";
+              badgeText = "⚠ Chưa chọn";
+            }
+
+            const showDetail = showAnswersGlobal || isTopicGraded || isCorrect || isWrong;
+
+            return `
+              <div class="${itemClass}" id="speaker-item-${key}">
+                <div class="speaker-header">
+                  <span class="speaker-label">Speaker ${sp.speakerNumber} <em>(${sp.code})</em></span>
+                  <div class="speaker-control-wrap">
+                    <select class="${selectClass}" data-topic="${topic.id}" data-speaker="${sp.speakerNumber}" onchange="onSelectAnswer(this)">
+                      ${optionsHtml}
+                    </select>
+                    <span class="${badgeClass}">${badgeText}</span>
+                  </div>
+                </div>
+                <div class="answer-details ${showDetail ? '' : 'hidden'}">
+                  ${isWrong ? `<div class="user-wrong-choice">✗ Bạn đã chọn: <del>${selectedVal}</del></div>` : ''}
+                  <div class="answer-en">✓ Đáp án đúng: <u>${sp.answer}</u></div>
+                  <div class="answer-vi"><strong>Nghĩa:</strong> <em>${sp.meaningVi}</em></div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+
+        let bannerClass = "topic-score-banner";
+        let bannerText = "";
+        if (isTopicGraded || topicAttemptedCount === 4) {
+          bannerClass += " show ";
+          if (topicCorrectCount === 4) {
+            bannerClass += "perfect";
+            bannerText = `🎉 Xuất sắc! Bạn trả lời đúng tuyệt đối 4/4 câu (100%).`;
+          } else if (topicCorrectCount >= 2) {
+            bannerClass += "partial";
+            bannerText = `Kết quả chấm Chủ đề ${topic.id}: Đúng ${topicCorrectCount}/4 câu (${Math.round((topicCorrectCount/4)*100)}%).`;
+          } else {
+            bannerClass += "low";
+            bannerText = `Kết quả chấm Chủ đề ${topic.id}: Đúng ${topicCorrectCount}/4 câu (${Math.round((topicCorrectCount/4)*100)}%) — Hãy xem kỹ đáp án bên dưới.`;
+          }
+        }
+
+        block.innerHTML = `
+          <div class="topic-header">
+            <div>
+              <div class="topic-title">CHỦ ĐỀ ${topic.id}: ${topic.title}${flamesStr}</div>
+              <p class="topic-meaning"><strong>Nghĩa chủ đề:</strong> <em>${topic.meaningVi}</em></p>
+            </div>
+            <div class="topic-actions">
+              <button class="btn btn-success" onclick="gradeSingleTopic(${topic.id})">✓ Chấm điểm</button>
+              <button class="btn" onclick="resetSingleTopic(${topic.id})">Làm lại</button>
+            </div>
+          </div>
+          <div class="${bannerClass}">
+            <span>${bannerText}</span>
+            <span>Đã chọn: ${topicAttemptedCount}/4</span>
+          </div>
+          <table class="bank-table">
+            <thead>
+              <tr><th class="bank-header">QUESTION BANK – CHỌN ĐÁP ÁN</th></tr>
+            </thead>
+            <tbody>
+              ${bankRowsHtml}
+            </tbody>
+          </table>
+          <div class="speakers-list">
+            ${speakersHtml}
+          </div>
+        `;
+
+        container.appendChild(block);
+      });
+
+      updateGlobalStats();
+    }
+
+    window.onSelectAnswer = function(selectEl) {
+      const topicId = Number(selectEl.getAttribute("data-topic"));
+      const speakerNum = Number(selectEl.getAttribute("data-speaker"));
+      const key = topicId + "-" + speakerNum;
+      userSelections[key] = selectEl.value;
+      renderTopics(document.getElementById("searchInput").value);
+    };
+
+    window.gradeSingleTopic = function(topicId) {
+      gradedTopics[topicId] = true;
+      renderTopics(document.getElementById("searchInput").value);
+    };
+
+    window.resetSingleTopic = function(topicId) {
+      delete gradedTopics[topicId];
+      for (let i = 1; i <= 4; i++) {
+        delete userSelections[topicId + "-" + i];
+      }
+      renderTopics(document.getElementById("searchInput").value);
+    };
+
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      renderTopics(e.target.value);
+    });
+
+    document.getElementById("gradeAllBtn").addEventListener("click", () => {
+      TOPICS.forEach((t) => {
+        gradedTopics[t.id] = true;
+      });
+      renderTopics(document.getElementById("searchInput").value);
+    });
+
+    document.getElementById("toggleAnswersBtn").addEventListener("click", () => {
+      showAnswersGlobal = !showAnswersGlobal;
+      renderTopics(document.getElementById("searchInput").value);
+    });
+
+    document.getElementById("resetPracticeBtn").addEventListener("click", () => {
+      Object.keys(userSelections).forEach((k) => delete userSelections[k]);
+      Object.keys(gradedTopics).forEach((k) => delete gradedTopics[k]);
+      showAnswersGlobal = false;
+      renderTopics(document.getElementById("searchInput").value);
+    });
+
+    renderTopics();
+  </script>
+</body>
+</html>
